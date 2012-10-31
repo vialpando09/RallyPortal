@@ -26,7 +26,8 @@ namespace RallyPortal
         public System.DateTime LastModifiedDate { get; set; }
         public bool Published { get; set; }
         public string ImageUrl { get; set; }
-        public string Author { get; set; }
+        public string AuthorName { get; set; }
+        public string AuthorEmail { get; set; }
     
         public virtual ICollection<Comment> Comment { get; set; }
     }

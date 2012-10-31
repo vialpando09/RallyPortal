@@ -16,15 +16,17 @@ namespace RallyPortal
     {
         public Gallery()
         {
-            this.Image = new HashSet<Image>();
+            this.Images = new HashSet<Image>();
         }
     
         public int Id { get; set; }
         public bool Published { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int GalleryCategoryId { get; set; }
     
-        public virtual ICollection<Image> Image { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
+        public virtual GalleryCategory Category { get; set; }
     }
     
 }

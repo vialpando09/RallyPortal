@@ -11,7 +11,6 @@ namespace RallyPortal.Controllers
 {
     public class AccountController : Controller
     {
-
         //
         // GET: /Account/LogOn
 

@@ -1,63 +1,30 @@
 ﻿@model IEnumerable<RallyPortal.Team>
-
+@using Telerik.Web.Mvc.UI           
+@using RallyPortal;
 @{
     ViewBag.Title = "Index";
+    ViewBag.PageTitle = "Teams"; 
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table>
-    <tr>
-        <th>
-            TeamName
-        </th>
-        <th>
-            DriverName
-        </th>
-        <th>
-            CoDriverName
-        </th>
-        <th>
-            TeamImageUrl
-        </th>
-        <th>
-            DriverImageUrl
-        </th>
-        <th>
-            CoDriverImageUrl
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TeamName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DriverName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CoDriverName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TeamImageUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DriverImageUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CoDriverImageUrl)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="content_pad">
+    @Html.ActionLinkButton(Url, "Create", "Team", null, "Create")
+    @(Html.Telerik().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(o => o.TeamName).Title("Team Name");
+            columns.Bound(o => o.DriverName).Title("Driver Name");
+            columns.Bound(o => o.CoDriverName).Title("Co-Driver Name");
+            columns.Template(
+                @<text>
+    @Html.ActionLinkButton(Url, "Edit", "Team", new { id = item.Id },"Edit")
+    @Html.ActionLinkButton(Url, "Delete", "Team", new { id = item.Id }, "Delete")
+    @Html.ActionLinkButton(Url, "Details", "Team", new { id = item.Id }, "Details")
+    </text>
+            ).Title("").Width(400);
+        })
+        .Scrollable(scrolling => scrolling.Enabled(false))
+        .Sortable(sorting => sorting.Enabled(true))
+        .Pageable(paging => paging.Enabled(true))
+        .Footer(true)
+)
+</div>

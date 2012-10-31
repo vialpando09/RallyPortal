@@ -30,5 +30,6 @@ namespace RallyPortal
         public DbSet<Team> TeamSet { get; set; }
         public DbSet<Image> ImageSet { get; set; }
         public DbSet<Gallery> GallerySet { get; set; }
+        public DbSet<GalleryCategory> GalleryCategorySet { get; set; }
     }
 }

@@ -21,6 +21,9 @@ namespace RallyPortal
         public string TeamImageUrl { get; set; }
         public string DriverImageUrl { get; set; }
         public string CoDriverImageUrl { get; set; }
+        public string TeamSummary { get; set; }
+        public string DriverSummary { get; set; }
+        public string CoDriverSummary { get; set; }
     }
     
 }

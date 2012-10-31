@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 09/26/2012 16:09:41
--- Generated from EDMX file: D:\Documents\Visual Studio 2010\Projects\RallyPortal\RallyPortal\Model.edmx
+-- Date Created: 10/27/2012 19:56:59
+-- Generated from EDMX file: C:\Users\Vialpando\Documents\GitHub\RallyPortal\RallyPortal\Model.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -22,6 +22,12 @@ IF OBJECT_ID(N'[dbo].[FK_ArticleComment]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_GalleryImage]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[ImageSet] DROP CONSTRAINT [FK_GalleryImage];
+GO
+IF OBJECT_ID(N'[dbo].[FK_SubGalleryCategory]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GalleryCategorySet] DROP CONSTRAINT [FK_SubGalleryCategory];
+GO
+IF OBJECT_ID(N'[dbo].[FK_GalleryCategoryGallery]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GallerySet] DROP CONSTRAINT [FK_GalleryCategoryGallery];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Highlights_inherits_Article]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[ArticleSet_Highlights] DROP CONSTRAINT [FK_Highlights_inherits_Article];
@@ -46,6 +52,9 @@ GO
 IF OBJECT_ID(N'[dbo].[GallerySet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GallerySet];
 GO
+IF OBJECT_ID(N'[dbo].[GalleryCategorySet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GalleryCategorySet];
+GO
 IF OBJECT_ID(N'[dbo].[ArticleSet_Highlights]', 'U') IS NOT NULL
     DROP TABLE [dbo].[ArticleSet_Highlights];
 GO
@@ -63,7 +72,8 @@ CREATE TABLE [dbo].[ArticleSet] (
     [LastModifiedDate] datetime  NOT NULL,
     [Published] bit  NOT NULL,
     [ImageUrl] nvarchar(max)  NOT NULL,
-    [Author] nvarchar(max)  NOT NULL
+    [AuthorName] nvarchar(max)  NOT NULL,
+    [AuthorEmail] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -86,7 +96,10 @@ CREATE TABLE [dbo].[TeamSet] (
     [CoDriverName] nvarchar(max)  NOT NULL,
     [TeamImageUrl] nvarchar(max)  NOT NULL,
     [DriverImageUrl] nvarchar(max)  NOT NULL,
-    [CoDriverImageUrl] nvarchar(max)  NOT NULL
+    [CoDriverImageUrl] nvarchar(max)  NOT NULL,
+    [TeamSummary] nvarchar(max)  NOT NULL,
+    [DriverSummary] nvarchar(max)  NOT NULL,
+    [CoDriverSummary] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -95,8 +108,8 @@ CREATE TABLE [dbo].[ImageSet] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Title] nvarchar(max)  NOT NULL,
     [Description] nvarchar(max)  NOT NULL,
-    [ImageUrl] nvarchar(max)  NOT NULL,
-    [GalleryId] int  NOT NULL
+    [GalleryId] int  NOT NULL,
+    [ImageId] int  NOT NULL
 );
 GO
 
@@ -105,7 +118,17 @@ CREATE TABLE [dbo].[GallerySet] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Published] bit  NOT NULL,
     [Title] nvarchar(max)  NOT NULL,
-    [Description] nvarchar(max)  NOT NULL
+    [Description] nvarchar(max)  NOT NULL,
+    [GalleryCategoryId] int  NOT NULL
+);
+GO
+
+-- Creating table 'GalleryCategorySet'
+CREATE TABLE [dbo].[GalleryCategorySet] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Title] nvarchar(max)  NOT NULL,
+    [GalleryCategoryId] int  NOT NULL,
+    [GalleryCategoryId1] int  NULL
 );
 GO
 
@@ -150,6 +173,12 @@ ADD CONSTRAINT [PK_GallerySet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'GalleryCategorySet'
+ALTER TABLE [dbo].[GalleryCategorySet]
+ADD CONSTRAINT [PK_GalleryCategorySet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Id] in table 'ArticleSet_Highlights'
 ALTER TABLE [dbo].[ArticleSet_Highlights]
 ADD CONSTRAINT [PK_ArticleSet_Highlights]
@@ -188,13 +217,41 @@ ON [dbo].[ImageSet]
     ([GalleryId]);
 GO
 
+-- Creating foreign key on [GalleryCategoryId] in table 'GallerySet'
+ALTER TABLE [dbo].[GallerySet]
+ADD CONSTRAINT [FK_GalleryCategoryGallery]
+    FOREIGN KEY ([GalleryCategoryId])
+    REFERENCES [dbo].[GalleryCategorySet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GalleryCategoryGallery'
+CREATE INDEX [IX_FK_GalleryCategoryGallery]
+ON [dbo].[GallerySet]
+    ([GalleryCategoryId]);
+GO
+
+-- Creating foreign key on [GalleryCategoryId1] in table 'GalleryCategorySet'
+ALTER TABLE [dbo].[GalleryCategorySet]
+ADD CONSTRAINT [FK_GalleryCategoryGalleryCategory]
+    FOREIGN KEY ([GalleryCategoryId1])
+    REFERENCES [dbo].[GalleryCategorySet]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GalleryCategoryGalleryCategory'
+CREATE INDEX [IX_FK_GalleryCategoryGalleryCategory]
+ON [dbo].[GalleryCategorySet]
+    ([GalleryCategoryId1]);
+GO
+
 -- Creating foreign key on [Id] in table 'ArticleSet_Highlights'
 ALTER TABLE [dbo].[ArticleSet_Highlights]
 ADD CONSTRAINT [FK_Highlights_inherits_Article]
     FOREIGN KEY ([Id])
     REFERENCES [dbo].[ArticleSet]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
 -- --------------------------------------------------
